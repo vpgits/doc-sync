@@ -1,0 +1,176 @@
+{
+  "_comment": "A config at realistic scale, after the generated one from doc-sync-init has been NARROWED by hand. The shape is what to copy, not the paths: one targets entry per code area, pointing at the doc that area actually owns.",
+  "baseline": {
+    "strategy": "lastTag",
+    "fallback": "previousTagOrNCommits"
+  },
+  "ignore": [
+    "**/*.lock",
+    "pnpm-lock.yaml",
+    "**/*.snap",
+    "**/__generated__/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/*.generated.*",
+    ".claude/skills/**",
+    ".claude/docs-sync.*"
+  ],
+  "tierA": {
+    "comment": "Agent instructions — always escalate, never auto-edit. Glob-matched so a newly added file is caught before anyone updates this list.",
+    "patterns": [
+      "**/CLAUDE.md",
+      "**/AGENTS.md",
+      ".github/copilot-instructions.md"
+    ]
+  },
+  "targets": [
+    {
+      "code": "services/api/infrastructure/**",
+      "docs": [
+        "docs/deployment/infrastructure/**"
+      ]
+    },
+    {
+      "code": "services/api/**",
+      "docs": [
+        "services/api/docs/**",
+        "docs/architecture/backend.md"
+      ]
+    },
+    {
+      "code": "services/worker/**",
+      "docs": [
+        "docs/architecture/background-jobs.md"
+      ]
+    },
+    {
+      "code": "apps/web/**",
+      "docs": [
+        "docs/architecture/frontend.md"
+      ]
+    },
+    {
+      "code": "apps/mobile/**",
+      "docs": [
+        "docs/mobile/**"
+      ]
+    },
+    {
+      "code": "packages/ui/**",
+      "docs": [
+        "docs/development/design-system.md"
+      ]
+    },
+    {
+      "code": "packages/i18n/**",
+      "docs": [
+        "docs/localization.md"
+      ]
+    },
+    {
+      "code": "**/locales/**",
+      "docs": [
+        "docs/localization.md"
+      ]
+    },
+    {
+      "code": "infra/**",
+      "docs": [
+        "docs/deployment/**"
+      ]
+    },
+    {
+      "code": ".github/workflows/**",
+      "docs": [
+        "docs/deployment/ci.md"
+      ]
+    },
+    {
+      "code": "package.json",
+      "docs": [
+        "docs/getting-started/**"
+      ]
+    },
+    {
+      "code": "pnpm-workspace.yaml",
+      "docs": [
+        "docs/getting-started/**"
+      ]
+    },
+    {
+      "code": ".nvmrc",
+      "docs": [
+        "docs/getting-started/**"
+      ]
+    },
+    {
+      "code": "packages/**",
+      "docs": [
+        "docs/development/**"
+      ]
+    }
+  ],
+  "targetsNote": "Most specific (longest) matching 'code' glob wins, single match. Note that `services/api/infrastructure/**` is listed above `services/api/**` for readability only — the length rule is what actually decides.",
+  "locales": [
+    "en",
+    "de",
+    "fr"
+  ],
+  "datedDocs": [
+    "**/terms*",
+    "**/privacy*"
+  ],
+  "neverAutoEdit": [
+    "**/terms*",
+    "**/terms*/**",
+    "**/privacy*",
+    "**/privacy*/**",
+    "**/LICENSE*"
+  ],
+  "neverAutoEditNote": "Published legal and policy documents, in every locale. Escalate-only, treated like Tier A no matter how confident the edit looks. Three effects compound: editing one is a legal act rather than a doc refresh; the 'locales' rule would rewrite the non-English variants with no native speaker reviewing them; and 'datedDocs' would then stamp the result as freshly updated, which is precisely the signal a reader trusts.",
+  "commitWeights": {
+    "feat": "B",
+    "fix": "B",
+    "refactor": "none",
+    "chore": "none",
+    "docs": "none",
+    "test": "none",
+    "style": "none"
+  },
+  "commitWeightsNote": "Tier-B noise filter ONLY. It never suppresses the Tier A scan — a chore: or refactor: commit can still add an agent-instruction file.",
+  "driftThreshold": {
+    "commits": 15,
+    "days": 14,
+    "_note": "check-drift nudges only past these — a watermark that fires on every commit trains itself into being ignored."
+  },
+  "provenance": {
+    "stamp": "<!-- doc-sync: verified-at {sha} -->",
+    "rule": "THE STAMP IS THE CERTIFICATION, NOT THE BASELINE. Every Tier B doc verified in a run — edited, or checked and found current — gets stamped with the HEAD sha via scripts/stamp-verified.sh. A doc the run never looked at keeps its old stamp and stays visibly stale in doc-audit's aging report, instead of being silently certified by a baseline bump it never participated in. Never stamp Tier A files. The baseline in docs-sync.state.json is a scheduling hint: it bounds the next diff, it does not assert completeness."
+  },
+  "docAudit": {
+    "_comment": "roots = doc trees to walk. topLevelDirs = this repo's top-level directories, used to recognise which backticked tokens are meant to be repo paths. skipDirs = vendored or unmaintained trees.",
+    "roots": [
+      "docs",
+      "services/api/docs"
+    ],
+    "topLevelDirs": [
+      "apps",
+      "packages",
+      "services",
+      "infra",
+      "tools",
+      "docs",
+      "scripts",
+      ".github",
+      ".claude"
+    ],
+    "skipDirs": [
+      "node_modules",
+      "vendor",
+      "archive",
+      "legacy",
+      "dist",
+      "build"
+    ]
+  }
+}

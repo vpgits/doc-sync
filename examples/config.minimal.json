@@ -1,0 +1,76 @@
+{
+  "_comment": "Smallest config that works. Grow the targets map as the run reports accumulate 'unmapped path' warnings — that is the intended maintenance loop.",
+  "baseline": {
+    "strategy": "lastTag",
+    "fallback": "previousTagOrNCommits"
+  },
+  "ignore": [
+    "**/*.lock",
+    "**/dist/**",
+    "**/*.generated.*",
+    ".claude/skills/**",
+    ".claude/docs-sync.*"
+  ],
+  "tierA": {
+    "comment": "Agent instructions — always escalate, never auto-edit.",
+    "patterns": [
+      "**/CLAUDE.md",
+      "**/AGENTS.md"
+    ]
+  },
+  "targets": [
+    {
+      "code": "src/**",
+      "docs": [
+        "docs/**"
+      ]
+    },
+    {
+      "code": "package.json",
+      "docs": [
+        "docs/getting-started/**",
+        "README.md"
+      ]
+    }
+  ],
+  "targetsNote": "When a changed path matches more than one 'code' glob, the most specific (longest) match wins.",
+  "locales": [
+    "en"
+  ],
+  "datedDocs": [],
+  "neverAutoEdit": [
+    "**/LICENSE*"
+  ],
+  "commitWeights": {
+    "feat": "B",
+    "fix": "B",
+    "refactor": "none",
+    "chore": "none",
+    "docs": "none",
+    "test": "none"
+  },
+  "driftThreshold": {
+    "commits": 15,
+    "days": 14
+  },
+  "provenance": {
+    "stamp": "<!-- doc-sync: verified-at {sha} -->",
+    "rule": "THE STAMP IS THE CERTIFICATION, NOT THE BASELINE. Every doc verified in a run — edited, or checked and found current — gets stamped with the HEAD sha. A doc the run never looked at keeps its old stamp and stays visibly stale in doc-audit, instead of being silently certified by a baseline bump it never participated in."
+  },
+  "docAudit": {
+    "roots": [
+      "docs"
+    ],
+    "topLevelDirs": [
+      "src",
+      "docs",
+      "scripts",
+      ".github"
+    ],
+    "skipDirs": [
+      "node_modules",
+      "vendor",
+      "dist"
+    ]
+  }
+}
